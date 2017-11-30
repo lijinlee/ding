@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="copyright" content="All Rights Reserved, Copyright (C) 2013, Wuyeguo, Ltd."/>
+    <title>欢迎登录小马快修管理系统</title>
+    <link rel="stylesheet" type="text/css" href="js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="pub/css/wu.css"/>
+    <link rel="stylesheet" type="text/css" href="pub/css/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="js/ztree/js/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="pub/adminJs/public.js"></script>
+    <script type="text/javascript" src="js/director/director.js"></script>
+    <script type="text/javascript" src="pub/adminJs/root.js"></script>
+    <script>
+        /**
+         * Name 添加菜单选项
+         * Param title 名称
+         * Param href 链接
+         * Param iconCls 图标样式
+         * Param iframe 链接跳转方式（true为iframe，false为href）
+         */
+        function addTab(title, href){
+            var tabPanel = $('#wu-tabs');
+            if(!tabPanel.tabs('exists',title)){
+                var content = '<iframe scrolling="auto" frameborder="0"  src="'+ href +'" style="width:100%;height:100%;"></iframe>';
+                tabPanel.tabs('add',{
+                    title:title,
+                    content:content,
+                    iconCls:"icon-code-group",
+                    fit:true,
+                    cls:'pd3',
+                    closable:true
+                });
+            }else {
+                tabPanel.tabs('select',title);
+            }
+        }
+        /**
+         * Name 移除菜单选项
+         */
+        function removeTab(){
+            var tabPanel = $('#wu-tabs');
+            var tab = tabPanel.tabs('getSelected');
+            if (tab){
+                var index = tabPanel.tabs('getTabIndex', tab);
+                tabPanel.tabs('close', index);
+            }
+        }
+
+        $.extend($.fn.validatebox.defaults.rules, {
+            /*必须和某个字段相等*/
+            equalTo: {
+                validator: function (value, param) {
+                    return $(param[0]).val()==value;
+                },
+                message:'字段不匹配'
+            }
+        });
+
+        //退出系统
+
+        function confirm1() {
+            $.messager.confirm('消息', '请确定退出系统！！', function (r) {
+                if (r) {
+                    cookie.delete("token");
+                    window.location.href = "/login.html"
+                }
+            });
+        }
+
+        //修改密码点击确定执行函数
+
+        function changepass() {
+            var oldPassword = $("#oldPassword").val();
+            var newPassword = $("#newPassword").val();
+            var confirmPassword = $("#confirmPassword").val();
+            if($('#modifyForm').form('enableValidation').form('validate')){
+                $.ajax({
+                    type: "POST",
+                    data: {"oldPassword":oldPassword,"newPassword":newPassword},
+                    dataType: "json",
+                    url: "/rest/sysUser/modifyPassword",
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Authorization", "bearer "+cookie.get("token"));
+                    },
+                    success: function(result) {
+                        if(result.flag=="1"){
+                            $('#dlg').dialog('close');
+                            $.messager.alert('信息提示', result.msg, 'info');
+                        }else{
+                            $.messager.alert('信息提示', result.msg, 'info');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function modifyPassword() {
+            $('#modifyForm').form("clear")
+            $('#dlg').dialog('open');
+        }
+        $(function () {
+            $('#dlg').dialog('close');
+            initMenu();
+            $("#loginUser").text(cookie.get("loginUser"));
+
+        });
+
+        function initMenu(){
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/auth/initMenu",
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "bearer "+cookie.get("token"));
+                },
+                success: function(result) {
+                    if(result.flag=="1"){
+                        var acc=$("#accordion");
+                        var arr=result.data;
+                        for(var i in arr){
+                            var menu=$("#menuModel").clone().removeAttr("id").show();
+                            var tree=$("#treeModel").clone().removeAttr("id").show();
+                            menu.attr("title",arr[i].name);
+                            if(arr[i].sysPermissionList){
+                                var obj=arr[i].sysPermissionList;
+                                for(var j in obj){
+                                    var li=$("#liModel").clone().removeAttr("id").show();
+                                    li.find("a").attr("data-link","#"+obj[j].url.replace(".html",""));
+                                    li.find("a").text(obj[j].name);
+                                    tree.append(li)
+                                }
+                            }
+                            tree.tree();
+                            menu.append(tree);
+                            acc.append(menu);
+                        }
+                        acc.accordion();
+                    }else{
+                        window.location="/login.html"
+                    }
+                }
+            });
+        }
+        function targetTo(obj){
+            var url=$(obj).attr("data-link")
+            window.location=url+"?_t="+new Date().getTime();
+        }
+        router.on('/admin/(\\w+)',function(who) {
+            var obj=$("a[data-link='#/admin/"+who+"']")[0];
+            addTab($(obj).text(),"/admin/"+who+".html?_t="+new Date().getTime());
+        })
+    </script>
+
+</head>
+<body class="easyui-layout">
+<!-- begin of header -->
+<div class="wu-header" data-options="region:'north',border:false,split:true">
+    <div class="wu-header-left">
+        <img class="loginimg" src="pub/images/logo-ERP8.png"/>
+    </div>
+    <div class="wu-header-right">
+        <p><strong id="loginUser" class="easyui-tooltip">admin</strong>，欢迎您！</p>
+
+        <p><a href="javascript:void(0)" onclick="modifyPassword()">修改密码</a>|<a href="javascript:void(0)"
+                                                                                        onclick="confirm1()">安全退出</a>
+        </p>
+    </div>
+
+    <div id="dlg" class="easyui-dialog"  title="修改密码" data-options="iconCls:'icon-save'"
+         style="width:400px;height:200px;padding:10px;">
+        <form id="modifyForm" method="post">
+            <table cellpadding=3 style="margin-left: 70px">
+                <tr>
+                    <td>旧密码：</td>
+                    <td><input id="oldPassword" name="oldPassword" type="password" class="easyui-validatebox" required="true" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>新密码：</td>
+                    <td><input id="newPassword" name="newPassword" class="easyui-validatebox" required="true" type="password"
+                               value=""/>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>确认密码：</td>
+                    <td><input type="password" name="confirmPassword" id="confirmPassword" required="true"
+                               class="easyui-validatebox"
+                               validType="equalTo['#newPassword']" invalidMessage="两次输入密码不匹配"/>
+                    </td>
+                </tr>
+
+            </table>
+
+            <div border="false" style="text-align: center;margin-top: 20px; height: 30px; line-height: 30px;">
+                <a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)"
+                   onclick="changepass()">确定</a>
+                <a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"
+                   onclick="$('#dlg').dialog('close')">取消</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- end of header -->
+<!-- begin of sidebar -->
+<div class="wu-sidebar" data-options="region:'west',split:true,border:true,title:'菜单'">
+    <div id="accordion" data-options="border:false,fit:true" >
+    </div>
+</div>
+<!-- end of sidebar -->
+<!-- begin of main -->
+<div class="wu-main" data-options="region:'center'">
+    <div id="wu-tabs" class="easyui-tabs" data-options="border:false,fit:true">
+    </div>
+</div>
+<!-- end of main -->
+<!-- begin of footer -->
+<div class="wu-footer" data-options="region:'south',border:true,split:true">
+    版权所有 Copyright 千里马机械供应链股份有限公司
+</div>
+<!-- end of footer -->
+</body>
+<ul id="treeModel" class="easyui-tree" style="display: none">
+</ul>
+<li id="liModel" iconCls="icon-code-group" style="display: none">
+    <a href="javascript:void(0);" data-link="" onclick="targetTo(this);" ></a>
+</li>
+<div id="menuModel" title="系统管理" data-options="iconCls:'icon-application-cascade'" style="padding:5px;display: none">
+</div>
+</html>

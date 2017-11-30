@@ -1,0 +1,15 @@
+{
+  "name": "小马快修API",
+  "title": "小马快修API",
+  "url" : "http://116.211.121.99:8080",
+  "header": {
+    "title": "小马快修API"
+  },
+  "footer": {
+    "title": "接口负责人"
+  },
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
+}

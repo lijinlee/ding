@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.exiaoma.system.dao.SysPermissionMapper" >
+  <resultMap id="BaseResultMap" type="cn.exiaoma.system.model.SysPermission" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="descritpion" property="descritpion" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="pId" property="pId" jdbcType="BIGINT" />
+    <result column="is_menu" property="isMenu" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, descritpion, url, pId,is_menu
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_permission
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_permission
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.exiaoma.system.model.SysPermission" >
+    insert into sys_permission (id, name, descritpion, 
+      url, pId,is_menu)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{descritpion,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{pId,jdbcType=BIGINT}, #{isMenu,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.exiaoma.system.model.SysPermission" >
+    insert into sys_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="isMenu != null" >
+        is_menu,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="descritpion != null" >
+        descritpion,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="pId != null" >
+        pId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="isMenu != null" >
+        #{isMenu,jdbcType=INTEGER},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="descritpion != null" >
+        #{descritpion,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        #{pId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.exiaoma.system.model.SysPermission" >
+    update sys_permission
+    <set >
+      <if test="isMenu != null" >
+        is_menu = #{isMenu,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="descritpion != null" >
+        descritpion = #{descritpion,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        pId = #{pId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.exiaoma.system.model.SysPermission" >
+    update sys_permission
+    set name = #{name,jdbcType=VARCHAR},
+      descritpion = #{descritpion,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      is_menu = #{isMenu,jdbcType=INTEGER},
+      pId = #{pId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="getAll" parameterType="long" resultMap="BaseResultMap">
+    select id,name,pId from sys_permission
+    <where>
+      <if test="_parameter!=null">
+        pId=#{pId}
+      </if>
+    </where>
+  </select>
+  <select id="getAllList" parameterType="cn.exiaoma.system.model.SysPermission" resultMap="BaseResultMap">
+    select * from sys_permission
+    <where>
+      <if test="pId!=null">
+       and pId = #{pId}
+      </if>
+      <if test="keyWord!=null">
+        and name like '%${keyWord}%'
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPermissionBySysUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select DISTINCT p.*
+    from sys_permission p join sys_permission_role pr on p.id=pr.permission_id join sys_role_user ru on pr.role_id=ru.role_id where ru.user_id=#{sysUserId}
+  </select>
+</mapper>

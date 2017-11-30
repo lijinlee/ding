@@ -1,0 +1,7 @@
+body{ margin:0; padding:0; background:#efefef; font-family:Georgia, Times, Verdana, Geneva, Arial, Helvetica, sans-serif; }
+div#mother{ margin: auto ;padding-top: 100px; width:950px; height:300px; position:relative; text-align: center}
+div#mother p{  font-size:14px; line-height:26px; }
+div#home{ margin:20px 0 0 400px; height:50px; width:140px;border-radius: 10px;box-shadow: 2px 2px #aaa;background: #ccc}
+div#home a{text-decoration: none;font-size:20px;color: #f0f0f0;line-height: 50px;font-weight: 600}
+div#home:hover a{color: #aaa}
+h1{ font-size:40px; margin-bottom:35px; }

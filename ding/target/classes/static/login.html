@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>欢迎登录小马快修管理系统</title>
+    <link href="pub/login/css/login.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="pub/css/wu.css"/>
+    <link rel="stylesheet" type="text/css" href="pub/css/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="js/ztree/js/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="pub/login/js/cloud.js" type="text/javascript"></script>
+    <script type="text/javascript" src="pub/adminJs/public.js"></script>
+    <script>
+        window.onload = function () {
+            if (top.location.href != location.href) {
+                top.location.href = location.href;
+            }
+        }
+        function login(){
+            $('#login-form').form('submit', {
+                url: '/auth/sysLogin',
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data.flag=="1") {
+                        cookie.set("token",data.token,1);
+                        cookie.set("auth",JSON.stringify(data.auth),1)
+                        cookie.set("loginUser",$("#sysUserName").val(),1);
+                        console.log(cookie);
+                        window.location="/index.html"
+                    }
+                    else {
+                        $.messager.alert('信息提示', data.msg, 'info');
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body class="main" style="background-position: -201.2px 0px;">
+
+<div id="mainBody">
+    <div id="cloud1" class="cloud" style="background-position: -101.5px 100px;"></div>
+    <div id="cloud2" class="cloud" style="background-position: 1092px 460px;"></div>
+</div>
+
+<div class="logintop">
+    <img class="loginimg" src="pub/images/logo-ERP8.png"/>
+</div>
+
+<div class="loginbody">
+    <span class="systemlogo"></span>
+    <div class="loginbox" style="position: absolute; left: 337px;">
+        <div style="width:165px; height:96px; position:absolute;top:8px;left:-70px">
+            <div class="tou"> </div>
+            <div class="initial_left_hand" id="left_hand"></div>
+            <div class="initial_right_hand" id="right_hand"></div>
+        </div>
+        <form id="login-form" method="post">
+            <ul>
+                <li><input name="sysUserName" required="true" type="text" id="sysUserName" class="loginuser ipt  easyui-validatebox" placeholder="请输入用户名/手机号码" ></li>
+                <li><input name="password" required="true"  type="password" id="password" class="loginpwd ipt easyui-validatebox" placeholder="请输入密码" ></li>
+                <li><input type="button" class="loginbtn" onclick="login();" value="登录"><label></label></li>
+            </ul>
+        </form>
+    </div>
+
+</div>
+<div class="loginbm">版权所有 Copyright 千里马机械供应链股份有限公司</div>
+</body>
+</html>

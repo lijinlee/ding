@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>权限管理</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="../pub/css/wu.css"/>
+    <link rel="stylesheet" type="text/css" href="../pub/css/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../js/ztree/js/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../pub/adminJs/public.js"></script>
+    <script type="text/javascript" src="../js/director/director.js"></script>
+    <script type="text/javascript" src="../pub/adminJs/root.js"></script>
+    <script type="text/javascript" src="../pub/adminJs/sysPermission.js"></script>
+    <script>
+        var zNodes = {id: -1, pId: -2, name: '资源', isParent: true, open: true};
+        var cNodes = [];
+        var setting = {
+            view: {
+                selectedMulti: false
+            }, data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                beforeClick: beforeClick,
+                onClick: onClick
+            }
+        };
+
+
+        function beforeClick(treeId, treeNode, clickFlag) {
+            return true;
+        }
+
+        function onClick(event, treeId, treeNode, clickFlag) {
+            var a = treeNode.pId;
+            var b = treeNode.id;
+            loadData(b);
+            pid = b;
+
+        }
+
+        function loadData(b) {
+            _options.url = '/admin/sysPermission/getPage?pId=' + b;
+            $('#wu-datagrid-street').datagrid(_options);
+            return true;
+        }
+
+        function loadTree() {
+            $.ajax({
+                url: '/admin/sysPermission/getAll',
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    cNodes = data.data;
+                    cNodes.push(zNodes)
+                    streetTreeObj = $.fn.zTree.init($("#wu-category-tree-street"), setting, cNodes);
+                }
+            });
+        }
+
+
+        $(function () {
+            loadTree();
+        });
+
+
+    </script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',border:true,split:true," title="分类管理" style="width:150px; padding:5px;">
+        <ul id="wu-category-tree-street" permission="/admin/sysPermission/getAll" class="ztree" style="width:230px; overflow:auto;">
+
+        </ul>
+    </div>
+    <div data-options="region:'center',border:false">
+        <!-- Begin of toolbar -->
+        <div id="wu-toolbar-street">
+            <div class="wu-toolbar-button">
+                <a href="javascript:void(0);" permission="/admin/sysPermission/add" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd_street()"
+                   plain="true">添加</a>
+                <a href="javascript:void(0);" permission="/admin/sysPermission/update,/admin/sysPermission/get" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit_street()"
+                   plain="true">修改</a>
+                <a href="javascript:void(0);" permission="/admin/sysPermission/deletes" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove_street()"
+                   plain="true">删除</a>
+            </div>
+            <div class="wu-toolbar-search" permission="/admin/sysPermission/getPage" >
+                <label>关键词：</label><input id="keyWord-street" name="keyWord" class="wu-text" style="width:100px"/>
+                <a href="javascript:void(0);" onclick="searchByKeyWord_street();" class="easyui-linkbutton"
+                   iconCls="icon-search">开始检索</a>
+            </div>
+        </div>
+        <!-- End of toolbar -->
+        <table id="wu-datagrid-street" permission="/admin/sysPermission/getPage" toolbar="#wu-toolbar-street"></table>
+    </div>
+</div>
+
+<!-- Begin of easyui-dialog -->
+
+<div id="wu-dialog-street" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'"
+     style="width:400px; padding:10px;">
+    <form id="wu-form-street" method="post">
+        <input id="id-street" type="hidden" name="id" class="wu-hi"/>
+        <input id="pid-street" type="hidden" name="pid" class="wu-hi"/>
+        <table>
+
+            <tr>
+                <td align="right">名 称:</td>
+                <td>
+                    <input type="text" required="true" name="name" class="wu-text easyui-validatebox"/>
+                    <input type="text" name="id" hidden="hidden"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">菜 单:</td>
+                <td><input type="radio" name="isMenu" value="1" checked class="wu-radio easyui-validatebox"/> 是 <input
+                        type="radio" name="isMenu" value="0" class="wu-radio easyui-validatebox"/> 否
+                </td>
+            </tr>
+            <tr>
+                <td align="right">地 址:</td>
+                <td><input type="text" name="url" class="wu-text easyui-validatebox"/></td>
+            </tr>
+            <tr>
+                <td align="right">描 述:</td>
+                <td>
+                    <input type="text" name="descritpion" class="wu-text easyui-validatebox"/>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+</body>
+</html>
+
+<!-- End of easyui-dialog -->

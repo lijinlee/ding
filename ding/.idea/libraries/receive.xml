@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="receive">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/receive.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

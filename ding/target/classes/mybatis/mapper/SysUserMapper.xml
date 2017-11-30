@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.exiaoma.system.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="cn.exiaoma.system.model.SysUser" >
+    <id column="sys_user_id" property="sysUserId" jdbcType="BIGINT" />
+    <result column="sys_user_no" property="sysUserNo" jdbcType="VARCHAR" />
+    <result column="sys_user_name" property="sysUserName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="is_used" property="isUsed" jdbcType="INTEGER" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="is_system" property="isSystem" jdbcType="INTEGER" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="user_phosition" property="userPhosition" jdbcType="VARCHAR" />
+    <result column="birthdate" property="birthdate" jdbcType="TIMESTAMP" />
+    <result column="workdate" property="workdate" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_user_id" property="lastModifyUserId" jdbcType="BIGINT" />
+    <result column="last_moodify_date" property="lastMoodifyDate" jdbcType="TIMESTAMP" />
+    <result column="last_login_date" property="lastLoginDate" jdbcType="TIMESTAMP" />
+    <result column="device_number" property="deviceNumber" jdbcType="VARCHAR" />
+    <result column="job_number" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="employee_id" property="employeeId" jdbcType="BIGINT" />
+    <result column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="belong_id" property="belongId" jdbcType="BIGINT" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="RoleResultMap" extends="BaseResultMap" type="cn.exiaoma.system.model.SysUser" >
+    <result column="roles" property="roles" jdbcType="VARCHAR" />
+    <result column="roleIds" property="roleIds" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_user_id, sys_user_no, sys_user_name, password, is_used, dept_id, company_id, 
+    is_system, order_num, phone_number, user_phosition, birthdate, workdate, create_user_id, 
+    create_date, last_modify_user_id, last_moodify_date, device_number, job_number, channel, 
+    employee_id, menu_id, remark, belong_id, is_del,last_login_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where sys_user_id = #{sysUserId,jdbcType=BIGINT}
+  </select>
+
+  <select id="findByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where sys_user_name = #{userName}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_user
+    where sys_user_id = #{sysUserId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="sysUserId" parameterType="cn.exiaoma.system.model.SysUser" >
+    insert into sys_user (sys_user_id, sys_user_no, sys_user_name, 
+      password, is_used, dept_id, 
+      company_id, is_system, order_num, 
+      phone_number, user_phosition, birthdate, 
+      workdate, create_user_id, create_date, 
+      last_modify_user_id, last_moodify_date, device_number, 
+      job_number, channel, employee_id, 
+      menu_id, remark, belong_id, 
+      is_del,last_login_date)
+    values (#{sysUserId,jdbcType=BIGINT}, #{sysUserNo,jdbcType=VARCHAR}, #{sysUserName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{isUsed,jdbcType=INTEGER}, #{deptId,jdbcType=BIGINT}, 
+      #{companyId,jdbcType=BIGINT}, #{isSystem,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{userPhosition,jdbcType=VARCHAR}, #{birthdate,jdbcType=TIMESTAMP}, 
+      #{workdate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyUserId,jdbcType=BIGINT}, #{lastMoodifyDate,jdbcType=TIMESTAMP}, #{deviceNumber,jdbcType=VARCHAR}, 
+      #{jobNumber,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, #{employeeId,jdbcType=BIGINT}, 
+      #{menuId,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{belongId,jdbcType=BIGINT}, 
+      #{isDel,jdbcType=INTEGER}, #{lastLoginDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="sysUserId" parameterType="cn.exiaoma.system.model.SysUser" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysUserId != null" >
+        sys_user_id,
+      </if>
+      <if test="sysUserNo != null" >
+        sys_user_no,
+      </if>
+      <if test="sysUserName != null" >
+        sys_user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="isUsed != null" >
+        is_used,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="isSystem != null" >
+        is_system,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number,
+      </if>
+      <if test="userPhosition != null" >
+        user_phosition,
+      </if>
+      <if test="birthdate != null" >
+        birthdate,
+      </if>
+      <if test="workdate != null" >
+        workdate,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyUserId != null" >
+        last_modify_user_id,
+      </if>
+      <if test="lastMoodifyDate != null" >
+        last_moodify_date,
+      </if>
+      <if test="deviceNumber != null" >
+        device_number,
+      </if>
+      <if test="jobNumber != null" >
+        job_number,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="employeeId != null" >
+        employee_id,
+      </if>
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="belongId != null" >
+        belong_id,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="lastLoginDate != null" >
+        last_login_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysUserId != null" >
+        #{sysUserId,jdbcType=BIGINT},
+      </if>
+      <if test="sysUserNo != null" >
+        #{sysUserNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserName != null" >
+        #{sysUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="isUsed != null" >
+        #{isUsed,jdbcType=INTEGER},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="isSystem != null" >
+        #{isSystem,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhosition != null" >
+        #{userPhosition,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null" >
+        #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workdate != null" >
+        #{workdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyUserId != null" >
+        #{lastModifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="lastMoodifyDate != null" >
+        #{lastMoodifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceNumber != null" >
+        #{deviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNumber != null" >
+        #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null" >
+        #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="belongId != null" >
+        #{belongId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastLoginDate != null" >
+        #{lastLoginDate,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.exiaoma.system.model.SysUser" >
+    update sys_user
+    <set >
+      <if test="sysUserNo != null" >
+        sys_user_no = #{sysUserNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserName != null" >
+        sys_user_name = #{sysUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="isUsed != null" >
+        is_used = #{isUsed,jdbcType=INTEGER},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="isSystem != null" >
+        is_system = #{isSystem,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhosition != null" >
+        user_phosition = #{userPhosition,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null" >
+        birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workdate != null" >
+        workdate = #{workdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyUserId != null" >
+        last_modify_user_id = #{lastModifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="lastMoodifyDate != null" >
+        last_moodify_date = #{lastMoodifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceNumber != null" >
+        device_number = #{deviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNumber != null" >
+        job_number = #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null" >
+        employee_id = #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="belongId != null" >
+        belong_id = #{belongId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastLoginDate != null" >
+        last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP}
+      </if>
+    </set>
+    where sys_user_id = #{sysUserId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.exiaoma.system.model.SysUser" >
+    update sys_user
+    set sys_user_no = #{sysUserNo,jdbcType=VARCHAR},
+      sys_user_name = #{sysUserName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      is_used = #{isUsed,jdbcType=INTEGER},
+      dept_id = #{deptId,jdbcType=BIGINT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      is_system = #{isSystem,jdbcType=INTEGER},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      user_phosition = #{userPhosition,jdbcType=VARCHAR},
+      birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      workdate = #{workdate,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_user_id = #{lastModifyUserId,jdbcType=BIGINT},
+      last_moodify_date = #{lastMoodifyDate,jdbcType=TIMESTAMP},
+      device_number = #{deviceNumber,jdbcType=VARCHAR},
+      job_number = #{jobNumber,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=VARCHAR},
+      employee_id = #{employeeId,jdbcType=BIGINT},
+      menu_id = #{menuId,jdbcType=BIGINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      belong_id = #{belongId,jdbcType=BIGINT},
+      is_del = #{isDel,jdbcType=INTEGER},
+      last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
+    where sys_user_id = #{sysUserId,jdbcType=BIGINT}
+  </update>
+  <select id="getAll" resultMap="BaseResultMap">
+
+   SELECT  * FROM sys_user WHERE is_del = '0'
+
+  </select>
+  <select id="findByLike" resultMap="RoleResultMap" parameterType="java.lang.String">
+     SELECT u.is_used,u.last_login_date,u.sys_user_id,u.sys_user_name,group_concat(r.name) as roles,group_concat(r.id) as roleIds FROM sys_user u left join sys_role_user ru on u.sys_user_id=ru.user_id left join sys_role r on ru.role_id=r.id WHERE is_del = '0' AND sys_user_name LIKE #{keyWord} group by u.sys_user_id ORDER BY sys_user_id DESC
+</select>
+</mapper>
